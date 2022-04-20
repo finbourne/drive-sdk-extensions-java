@@ -11,31 +11,31 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 
-public class HttpLusidTokenProviderTests {
+public class HttpFinbourneTokenProviderTests {
 
-    private HttpLusidTokenProvider httpLusidTokenProvider;
+    private HttpFinbourneTokenProvider httpFinbourneTokenProvider;
 
     @Before
     public void setUp() throws ApiConfigurationException {
         ApiConfiguration apiConfiguration = new ApiConfigurationBuilder().build(CredentialsSource.credentialsFile);
         OkHttpClient httpClient = new HttpClientFactory().build(apiConfiguration);
-        httpLusidTokenProvider = new HttpLusidTokenProvider(apiConfiguration, httpClient);
+        httpFinbourneTokenProvider = new HttpFinbourneTokenProvider(apiConfiguration, httpClient);
     }
 
     @Test
-    public void get_OnRequestingAnInitialToken_ShouldReturnNewToken() throws LusidTokenException {
-        LusidToken lusidToken = httpLusidTokenProvider.get(Optional.empty());
+    public void get_OnRequestingAnInitialToken_ShouldReturnNewToken() throws FinbourneTokenException {
+        FinbourneToken finbourneToken = httpFinbourneTokenProvider.get(Optional.empty());
 
-        assertThat(lusidToken.getAccessToken(), not(isEmptyOrNullString()));
-        assertThat(lusidToken.getRefreshToken(), not(isEmptyOrNullString()));
-        assertThat(lusidToken.getExpiresAt(), not(nullValue()));
+        assertThat(finbourneToken.getAccessToken(), not(isEmptyOrNullString()));
+        assertThat(finbourneToken.getRefreshToken(), not(isEmptyOrNullString()));
+        assertThat(finbourneToken.getExpiresAt(), not(nullValue()));
     }
 
     @Test
-    public void get_OnRequestingANewTokenWithRefreshing_ShouldReturnNewRefreshedToken() throws LusidTokenException {
-        LusidToken initialToken = httpLusidTokenProvider.get(Optional.empty());
+    public void get_OnRequestingANewTokenWithRefreshing_ShouldReturnNewRefreshedToken() throws FinbourneTokenException {
+        FinbourneToken initialToken = httpFinbourneTokenProvider.get(Optional.empty());
         // request a new access token based on the refresh parameter of our original token
-        LusidToken refreshedToken = httpLusidTokenProvider.get(Optional.of(initialToken.getRefreshToken()));
+        FinbourneToken refreshedToken = httpFinbourneTokenProvider.get(Optional.of(initialToken.getRefreshToken()));
 
         assertThat(refreshedToken.getAccessToken(), not(isEmptyOrNullString()));
         assertThat(refreshedToken.getRefreshToken(), not(isEmptyOrNullString()));
@@ -45,10 +45,10 @@ public class HttpLusidTokenProviderTests {
     }
 
     @Test
-    public void get_OnRequestingANewTokenWithoutRefreshing_ShouldReturnNewToken() throws LusidTokenException {
-        LusidToken initialToken = httpLusidTokenProvider.get(Optional.empty());
+    public void get_OnRequestingANewTokenWithoutRefreshing_ShouldReturnNewToken() throws FinbourneTokenException {
+        FinbourneToken initialToken = httpFinbourneTokenProvider.get(Optional.empty());
         // request a new access token by going through a full reauthentication (i.e. not a refresh)
-        LusidToken aNewToken = httpLusidTokenProvider.get(Optional.empty());
+        FinbourneToken aNewToken = httpFinbourneTokenProvider.get(Optional.empty());
 
         assertThat(aNewToken.getAccessToken(), not(isEmptyOrNullString()));
         assertThat(aNewToken.getRefreshToken(), not(isEmptyOrNullString()));
@@ -59,12 +59,12 @@ public class HttpLusidTokenProviderTests {
 
     // Error cases
     @Test(expected = IllegalArgumentException.class)
-    public void get_OnBadTokenUrl_ShouldThrowException() throws LusidTokenException, ApiConfigurationException {
+    public void get_OnBadTokenUrl_ShouldThrowException() throws FinbourneTokenException, ApiConfigurationException {
         ApiConfiguration apiConfiguration = new ApiConfigurationBuilder().build(CredentialsSource.credentialsFile);
         OkHttpClient httpClient = new HttpClientFactory().build(apiConfiguration);
         apiConfiguration.setTokenUrl("invalidTokenUrl");
 
-        HttpLusidTokenProvider httpLusidTokenProvider = new HttpLusidTokenProvider(apiConfiguration, httpClient);
-        httpLusidTokenProvider.get(Optional.empty());
+        HttpFinbourneTokenProvider httpFinbourneTokenProvider = new HttpFinbourneTokenProvider(apiConfiguration, httpClient);
+        httpFinbourneTokenProvider.get(Optional.empty());
     }
 }

@@ -3,7 +3,7 @@ package com.finbourne.drive.extensions;
 import com.finbourne.drive.ApiException;
 import com.finbourne.drive.api.FoldersApi;
 import com.finbourne.drive.model.PagedResourceListOfStorageObject;
-import com.finbourne.drive.extensions.auth.LusidTokenException;
+import com.finbourne.drive.extensions.auth.FinbourneTokenException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -18,8 +18,8 @@ public class ApiFactoryBuilderTests {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void build_WithExistingConfigurationFile_ShouldReturnFactory() throws ApiException, ApiConfigurationException, LusidTokenException {
-        ApiFactory apiFactory = LusidApiFactoryBuilder.build(CredentialsSource.credentialsFile);
+    public void build_WithExistingConfigurationFile_ShouldReturnFactory() throws ApiException, ApiConfigurationException, FinbourneTokenException {
+        ApiFactory apiFactory = ApiFactoryBuilder.build(CredentialsSource.credentialsFile);
         assertThat(apiFactory, is(notNullValue()));
         assertThatFactoryBuiltApiCanMakeLUSIDCalls(apiFactory);
     }

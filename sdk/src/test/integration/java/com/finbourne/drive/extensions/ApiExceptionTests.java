@@ -3,10 +3,8 @@ package com.finbourne.drive.extensions;
 import com.finbourne.drive.ApiClient;
 import com.finbourne.drive.ApiException;
 import com.finbourne.drive.api.FoldersApi;
-import com.finbourne.drive.extensions.auth.LusidTokenException;
+import com.finbourne.drive.extensions.auth.FinbourneTokenException;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -14,7 +12,7 @@ import static org.junit.Assert.*;
 public class ApiExceptionTests {
 
     @Test
-    public void thrown_exception_tostring_contains_requestid() throws ApiConfigurationException, LusidTokenException {
+    public void thrown_exception_tostring_contains_requestid() throws ApiConfigurationException, FinbourneTokenException {
 
         ApiConfiguration apiConfiguration = new ApiConfigurationBuilder().build(CredentialsSource.credentialsFile);
         ApiClient apiClient = new ApiClientBuilder().build(apiConfiguration);

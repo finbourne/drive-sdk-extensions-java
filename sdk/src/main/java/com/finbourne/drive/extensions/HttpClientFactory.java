@@ -7,17 +7,17 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 /**
- * Builds http client to communicate to LUSID API instances.
+ * Builds http client to communicate to Drive API instances.
  *
  */
 public class HttpClientFactory {
 
     /**
      *  Builds a {@link OkHttpClient} from a {@link ApiConfiguration} to make
-     *  calls to the LUSID API.
+     *  calls to the Drive API.
      *
-     * @param apiConfiguration configuration to connect to LUSID API
-     * @return an client for http calls to LUSID API
+     * @param apiConfiguration configuration to connect to Drive API
+     * @return an client for http calls to Drive API
      */
     public OkHttpClient build(ApiConfiguration apiConfiguration){
         final OkHttpClient httpClient;

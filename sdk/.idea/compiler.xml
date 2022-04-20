@@ -7,12 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="drive-sdk-extensions" />
+        <module name="sdk" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="drive-sdk-extensions" options="-Xlint:all -J-Xss4m" />
+      <module name="sdk" options="-Xlint:all -J-Xss4m" />
     </option>
   </component>
 </project>

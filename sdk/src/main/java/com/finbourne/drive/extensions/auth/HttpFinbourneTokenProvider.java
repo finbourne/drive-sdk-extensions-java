@@ -1,6 +1,5 @@
 package com.finbourne.drive.extensions.auth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finbourne.drive.extensions.ApiConfiguration;
 import okhttp3.*;
@@ -15,57 +14,57 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Provides {@link LusidToken} used for API authentication by directly querying the authentication
- * token urls on the target LUSID instance. Always provides REFRESHable tokens (see
+ * Provides {@link FinbourneToken} used for API authentication by directly querying the authentication
+ * token urls on the target Drive instance. Always provides REFRESHable tokens (see
  * https://support.finbourne.com/using-a-refresh-token).
  *
  */
-public class HttpLusidTokenProvider {
+public class HttpFinbourneTokenProvider {
 
     /** Scope to ensure refresh token is enabled */
     private static final String SCOPE = "openid client groups offline_access";
 
     private static final MediaType FORM = MediaType.parse("application/x-www-form-urlencoded");
 
-    /** configuration parameters to connect to LUSID */
+    /** configuration parameters to connect to drive */
     private final ApiConfiguration apiConfiguration;
 
-    /** client to make http calls to LUSID */
+    /** client to make http calls to drive */
     private final OkHttpClient httpClient;
 
-    public HttpLusidTokenProvider(ApiConfiguration apiConfiguration, OkHttpClient httpClient) {
+    public HttpFinbourneTokenProvider(ApiConfiguration apiConfiguration, OkHttpClient httpClient) {
         this.apiConfiguration = apiConfiguration;
         this.httpClient = httpClient;
     }
 
     /**
-     * Retrieves a {@link LusidToken} via an authentication call to LUSID.
+     * Retrieves a {@link FinbourneToken} via an authentication call to drive.
      *
      * Will make a complete authentication call (with username and password) if no refresh token
      * is available. Otherwise will attempt to refresh the token.
      *
      * @param refreshToken - to attempt token refresh with it is available.
-     * @return an authenticated LUSID token
+     * @return an authenticated finbourne token
      *
-     * @throws LusidTokenException on failing to authenticate and retrieve a token
+     * @throws FinbourneTokenException on failing to authenticate and retrieve a token
      */
-    public LusidToken get(Optional<String> refreshToken) throws LusidTokenException {
+    public FinbourneToken get(Optional<String> refreshToken) throws FinbourneTokenException {
         final Request request = createAccessTokenRequest(refreshToken);
-        final LusidToken lusidToken = callAndMapResponseToToken(httpClient, request);
-        return lusidToken;
+        final FinbourneToken finbourneToken = callAndMapResponseToToken(httpClient, request);
+        return finbourneToken;
     }
 
-    private LusidToken callAndMapResponseToToken(OkHttpClient httpClient, Request request) throws LusidTokenException{
+    private FinbourneToken callAndMapResponseToToken(OkHttpClient httpClient, Request request) throws FinbourneTokenException {
         //  map json response
         Response response = null;
         try {
             response = httpClient.newCall(request).execute();
         } catch (IOException e) {
-            throw new LusidTokenException("Authentication request call could not complete. See details:", e);
+            throw new FinbourneTokenException("Authentication request call could not complete. See details:", e);
         }
 
         if (response.code() != 200) {
-            throw new LusidTokenException("Authentication call to LUSID failed. See response :" + response.toString());
+            throw new FinbourneTokenException("Authentication call to Drive failed. See response :" + response.toString());
         }
 
         final String content;
@@ -76,19 +75,19 @@ public class HttpLusidTokenProvider {
             mapper = new ObjectMapper();
             bodyValues = mapper.readValue(content, Map.class);
         } catch (IOException e) {
-            throw new LusidTokenException("Failed to correctly map the authentication response from LUSID. See details : ", e);
+            throw new FinbourneTokenException("Failed to correctly map the authentication response from Drive. See details : ", e);
         }
 
         if (!bodyValues.containsKey("access_token")) {
-            throw new LusidTokenException("Response from LUSID authentication is missing an access_token entry");
+            throw new FinbourneTokenException("Response from Drive authentication is missing an access_token entry");
         }
 
         if (!bodyValues.containsKey("refresh_token")) {
-            throw new LusidTokenException("Response from LUSID authentication is missing an refresh_token entry");
+            throw new FinbourneTokenException("Response from Drive authentication is missing an refresh_token entry");
         }
 
         if (!bodyValues.containsKey("expires_in")) {
-            throw new LusidTokenException("Response from LUSID authentication is missing an expires_in entry");
+            throw new FinbourneTokenException("Response from Drive authentication is missing an expires_in entry");
         }
 
         //  get access token, refresh token and token expiry
@@ -96,11 +95,11 @@ public class HttpLusidTokenProvider {
         final String refreshToken = (String)bodyValues.get("refresh_token");
         final int expires_in = (int)bodyValues.get("expires_in");
 
-        LusidToken lusidToken = new LusidToken(apiToken, refreshToken, calculateExpiryAtTime(LocalDateTime.now(), expires_in));
-        return lusidToken;
+        FinbourneToken finbourneToken = new FinbourneToken(apiToken, refreshToken, calculateExpiryAtTime(LocalDateTime.now(), expires_in));
+        return finbourneToken;
     }
 
-    private Request createAccessTokenRequest(Optional<String> refreshStringOpt) throws LusidTokenException {
+    private Request createAccessTokenRequest(Optional<String> refreshStringOpt) throws FinbourneTokenException {
         //  request body
         final String tokenRequestBody;
         try {
@@ -119,7 +118,7 @@ public class HttpLusidTokenProvider {
                         refreshStringOpt.get());
             }
         } catch (UnsupportedEncodingException e) {
-            throw new LusidTokenException("Failed to encode parameters from the API Configuration. Ensure your secrets files is properly setup.", e);
+            throw new FinbourneTokenException("Failed to encode parameters from the API Configuration. Ensure your secrets files is properly setup.", e);
         }
 
         final RequestBody body = RequestBody.create(FORM, tokenRequestBody);

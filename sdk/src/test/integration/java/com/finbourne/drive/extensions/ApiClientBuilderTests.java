@@ -1,7 +1,7 @@
 package com.finbourne.drive.extensions;
 
 import com.finbourne.drive.ApiClient;
-import com.finbourne.drive.extensions.auth.LusidTokenException;
+import com.finbourne.drive.extensions.auth.FinbourneTokenException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class ApiClientBuilderTests {
     }
 
     @Test
-    public void build_OnValidConfigurationFile_ShouldBuildKeepLiveApiClient() throws ApiConfigurationException, LusidTokenException {
+    public void build_OnValidConfigurationFile_ShouldBuildKeepLiveApiClient() throws ApiConfigurationException, FinbourneTokenException {
         // This test assumes default secrets file is valid. Same assertion as all other integration tests.
         ApiConfiguration apiConfiguration = new ApiConfigurationBuilder().build(CredentialsSource.credentialsFile);
         ApiClient apiClient = new ApiClientBuilder().build(apiConfiguration);
@@ -33,8 +33,8 @@ public class ApiClientBuilderTests {
     }
 
     @Test
-    public void build_BadTokenConfigurationFile_ShouldThrowException() throws LusidTokenException {
-        thrown.expect(LusidTokenException.class);
+    public void build_BadTokenConfigurationFile_ShouldThrowException() throws FinbourneTokenException {
+        thrown.expect(FinbourneTokenException.class);
         ApiConfiguration apiConfiguration = getBadTokenConfiguration();
         ApiClient apiClient = new ApiClientBuilder().build(apiConfiguration);
     }

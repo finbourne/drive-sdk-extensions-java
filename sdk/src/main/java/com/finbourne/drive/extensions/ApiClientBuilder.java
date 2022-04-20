@@ -1,10 +1,10 @@
 package com.finbourne.drive.extensions;
 
 import com.finbourne.drive.ApiClient;
-import com.finbourne.drive.extensions.auth.HttpLusidTokenProvider;
+import com.finbourne.drive.extensions.auth.HttpFinbourneTokenProvider;
 import com.finbourne.drive.extensions.auth.RefreshingTokenProvider;
-import com.finbourne.drive.extensions.auth.LusidToken;
-import com.finbourne.drive.extensions.auth.LusidTokenException;
+import com.finbourne.drive.extensions.auth.FinbourneToken;
+import com.finbourne.drive.extensions.auth.FinbourneTokenException;
 import okhttp3.OkHttpClient;
 
 /**
@@ -22,33 +22,33 @@ public class ApiClientBuilder {
      * @param apiConfiguration configuration to connect to LUSID API
      * @return
      *
-     * @throws LusidTokenException on failing to authenticate and retrieve an initial {@link LusidToken}
+     * @throws FinbourneTokenException on failing to authenticate and retrieve an initial {@link FinbourneToken}
      */
-    public ApiClient build(ApiConfiguration apiConfiguration) throws LusidTokenException {
+    public ApiClient build(ApiConfiguration apiConfiguration) throws FinbourneTokenException {
         // http client to use for api and auth calls
         OkHttpClient httpClient = createHttpClient(apiConfiguration);
 
         // token provider to keep client authenticated with automated token refreshing
-        RefreshingTokenProvider refreshingTokenProvider = new RefreshingTokenProvider(new HttpLusidTokenProvider(apiConfiguration, httpClient));
-        LusidToken lusidToken = refreshingTokenProvider.get();
+        RefreshingTokenProvider refreshingTokenProvider = new RefreshingTokenProvider(new HttpFinbourneTokenProvider(apiConfiguration, httpClient));
+        FinbourneToken finbourneToken = refreshingTokenProvider.get();
 
         // setup api client that managed submissions with latest token
-        ApiClient defaultApiClient = createDefaultApiClient(apiConfiguration, httpClient, lusidToken);
+        ApiClient defaultApiClient = createDefaultApiClient(apiConfiguration, httpClient, finbourneToken);
         return new RefreshingTokenApiClient(defaultApiClient, refreshingTokenProvider);
     }
 
-    ApiClient createDefaultApiClient(ApiConfiguration apiConfiguration, OkHttpClient httpClient, LusidToken lusidToken) throws LusidTokenException {
+    ApiClient createDefaultApiClient(ApiConfiguration apiConfiguration, OkHttpClient httpClient, FinbourneToken finbourneToken) throws FinbourneTokenException {
         ApiClient apiClient = createApiClient();
 
         if (apiConfiguration.getProxyAddress() != null) {
             apiClient.setHttpClient(httpClient);
         }
 
-        if (lusidToken.getAccessToken() == null) {
-            throw new LusidTokenException("Cannot construct an API client with a null authorisation header. Ensure " +
+        if (finbourneToken.getAccessToken() == null) {
+            throw new FinbourneTokenException("Cannot construct an API client with a null authorisation header. Ensure " +
                     "lusid token generated is valid");
         } else {
-            apiClient.addDefaultHeader("Authorization", "Bearer " + lusidToken.getAccessToken());
+            apiClient.addDefaultHeader("Authorization", "Bearer " + finbourneToken.getAccessToken());
         }
 
         if (apiConfiguration.getApplicationName() != null) {

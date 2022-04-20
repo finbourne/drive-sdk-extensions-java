@@ -76,7 +76,7 @@ public class ApiFactoryTest {
     public void build_ForNonApiPackageClass_ShouldThrowException(){
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("com.finbourne.drive.model.StorageObject class is not a supported API class. " +
-                "Supported API classes live in the " + ApiFactory.LUSID_API_PACKAGE + " package.");
+                "Supported API classes live in the " + ApiFactory.API_PACKAGE + " package.");
         apiFactory.build(StorageObject.class);
     }
 

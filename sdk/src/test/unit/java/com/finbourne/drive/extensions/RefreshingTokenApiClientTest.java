@@ -5,8 +5,8 @@ import com.finbourne.drive.ApiClient;
 import com.finbourne.drive.ApiException;
 import com.finbourne.drive.Pair;
 import com.finbourne.drive.extensions.auth.RefreshingTokenProvider;
-import com.finbourne.drive.extensions.auth.LusidToken;
-import com.finbourne.drive.extensions.auth.LusidTokenException;
+import com.finbourne.drive.extensions.auth.FinbourneToken;
+import com.finbourne.drive.extensions.auth.FinbourneTokenException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,8 +32,8 @@ public class RefreshingTokenApiClientTest {
     private RefreshingTokenProvider tokenProvider;
 
     // mock tokens
-    private LusidToken lusidToken = new LusidToken("access_01", "refresh_01", LocalDateTime.now());
-    private LusidToken anotherLusidToken = new LusidToken("access_02", "refresh_01", LocalDateTime.now());
+    private FinbourneToken finbourneToken = new FinbourneToken("access_01", "refresh_01", LocalDateTime.now());
+    private FinbourneToken anotherFinbourneToken = new FinbourneToken("access_02", "refresh_01", LocalDateTime.now());
 
     // call params
     private String path = "/get_portfolios";
@@ -51,11 +51,11 @@ public class RefreshingTokenApiClientTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
-    public void setUp() throws LusidTokenException {
+    public void setUp() throws FinbourneTokenException {
         defaultApiClient = mock(ApiClient.class);
         tokenProvider = mock(RefreshingTokenProvider.class);
 
-        doReturn(lusidToken).when(tokenProvider).get();
+        doReturn(finbourneToken).when(tokenProvider).get();
 
         refreshingTokenApiClient = new RefreshingTokenApiClient(defaultApiClient, tokenProvider);
     }
@@ -68,13 +68,13 @@ public class RefreshingTokenApiClientTest {
     }
 
     @Test
-    public void buildCall_ShouldUpdateAuthHeaderOnEveryCall() throws ApiException, LusidTokenException {
+    public void buildCall_ShouldUpdateAuthHeaderOnEveryCall() throws ApiException, FinbourneTokenException {
         refreshingTokenApiClient.buildCall(path, method, queryParams, collectionQueryParams, body, headerParams, cookieParams, formParams, authNames, apiCallback);
         verify(defaultApiClient).addDefaultHeader("Authorization", "Bearer access_01");
         verify(defaultApiClient).buildCall(path, method, queryParams, collectionQueryParams, body, headerParams, cookieParams,  formParams, authNames, apiCallback);
 
         // mock our token expiring and we now have an updated token to call api with
-        doReturn(anotherLusidToken).when(tokenProvider).get();
+        doReturn(anotherFinbourneToken).when(tokenProvider).get();
 
         // ensure that before delegating to buildCall in the default api client we firstly update it's header to use
         // the new token
@@ -84,13 +84,13 @@ public class RefreshingTokenApiClientTest {
     }
 
     @Test
-    public void buildCall_OnExceptionRetrievingToken_ShouldThrowApiException() throws LusidTokenException, ApiException {
+    public void buildCall_OnExceptionRetrievingToken_ShouldThrowApiException() throws FinbourneTokenException, ApiException {
         // mocking behaviour of an exception being thrown when attempting to retrieve an access token
-        LusidTokenException lusidTokenException = new LusidTokenException("Failed to create token for some reason");
-        doThrow(lusidTokenException).when(tokenProvider).get();
+        FinbourneTokenException finbourneTokenException = new FinbourneTokenException("Failed to create token for some reason");
+        doThrow(finbourneTokenException).when(tokenProvider).get();
 
         thrown.expect(ApiException.class);
-        thrown.expectCause(equalTo(lusidTokenException));
+        thrown.expectCause(equalTo(finbourneTokenException));
         refreshingTokenApiClient.buildCall(path, method, queryParams, collectionQueryParams, body, headerParams, cookieParams, formParams, authNames, apiCallback);
     }
 

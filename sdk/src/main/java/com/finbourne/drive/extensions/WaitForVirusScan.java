@@ -10,26 +10,25 @@ import io.vavr.CheckedFunction0;
 import java.io.File;
 import java.time.Duration;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class WaitForVirusScan {
-    FilesApi _filesApi;
-    RetryConfig _retryConfig;
-    RetryRegistry _retryRegistry;
-    Retry _retry;
+    FilesApi filesApi;
+    RetryConfig retryConfig;
+    RetryRegistry retryRegistry;
+    Retry retry;
 
-    public WaitForVirusScan(FilesApi filesApi){
-        _filesApi = filesApi;
+    public WaitForVirusScan(FilesApi filesApi, Integer retryAttempts, Integer retrySeconds){
+        this.filesApi = filesApi;
         Predicate<Throwable> retryPredicate = e -> (e instanceof ApiException) && (((ApiException) e).getCode() == 423);
-        _retryConfig = RetryConfig.custom().maxAttempts(20).waitDuration(Duration.of(15, SECONDS)).retryOnException(retryPredicate).build();
-        _retryRegistry = RetryRegistry.of(_retryConfig);
-        _retry = _retryRegistry.retry("VirusScanRetry", _retryConfig);
+        retryConfig = RetryConfig.custom().maxAttempts(retryAttempts != null ? retryAttempts : 20).waitDuration(Duration.of(retrySeconds != null ? retrySeconds : 15, SECONDS)).retryOnException(retryPredicate).build();
+        retryRegistry = RetryRegistry.of(retryConfig);
+        retry = retryRegistry.retry("VirusScanRetry", retryConfig);
     }
 
     public File DownloadFileWithRetry(String fileId) throws Throwable {
-        CheckedFunction0<File> retryingFileDownload = Retry.decorateCheckedSupplier(_retry, () -> _filesApi.downloadFile(fileId));
+        CheckedFunction0<File> retryingFileDownload = Retry.decorateCheckedSupplier(retry, () -> filesApi.downloadFile(fileId));
         return retryingFileDownload.apply();
     }
 }

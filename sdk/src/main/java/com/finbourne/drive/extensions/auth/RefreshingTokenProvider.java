@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Provides {@link LusidToken} used for API authentication and manages
+ * Provides {@link FinbourneToken} used for API authentication and manages
  * token expiry to ensure continued connectivity to LUSID API without the need
  * for explicit reauthentication by the caller.
  *
@@ -15,40 +15,40 @@ public class RefreshingTokenProvider {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
-    /** Underlying token provider that authenticates against LUSID*/
-    private final HttpLusidTokenProvider httpLusidTokenProvider;
+    /** Underlying token provider that authenticates against OKTA*/
+    private final HttpFinbourneTokenProvider httpFinbourneTokenProvider;
 
     /** Current token in use for API calls*/
-    private LusidToken currentToken;
+    private FinbourneToken currentToken;
 
     /**
      * Creates a KeepAuthTokenProvider based on an underlying token provider
      * that manages direct authentication with LUSID.
      *
-     * @param httpLusidTokenProvider underlying provider that manages explicit authentication calls to LUSID
+     * @param httpFinbourneTokenProvider underlying provider that manages explicit authentication calls to LUSID
      */
-    public RefreshingTokenProvider(HttpLusidTokenProvider httpLusidTokenProvider) {
-        this.httpLusidTokenProvider = httpLusidTokenProvider;
+    public RefreshingTokenProvider(HttpFinbourneTokenProvider httpFinbourneTokenProvider) {
+        this.httpFinbourneTokenProvider = httpFinbourneTokenProvider;
     }
 
     /**
-     * Stores an initial {@link LusidToken} on complete authentication (with username and password) and
+     * Stores an initial {@link FinbourneToken} on complete authentication (with username and password) and
      * will subsequently manage refreshing the token after expiry.
      *
-     * @return a live and valid {@link LusidToken}
+     * @return a live and valid {@link FinbourneToken}
      *
-     * @throws LusidTokenException on failing to authenticate and retrieve a token
+     * @throws FinbourneTokenException on failing to authenticate and retrieve a token
      */
-    public synchronized LusidToken get() throws LusidTokenException {
+    public synchronized FinbourneToken get() throws FinbourneTokenException {
         if (currentToken == null) {
-            currentToken = httpLusidTokenProvider.get(Optional.empty());
+            currentToken = httpFinbourneTokenProvider.get(Optional.empty());
         } else if (isTokenExpired(currentToken)) {
             try {
-                currentToken = httpLusidTokenProvider.get(Optional.of(currentToken.getRefreshToken()));
-            } catch (LusidTokenException e){
+                currentToken = httpFinbourneTokenProvider.get(Optional.of(currentToken.getRefreshToken()));
+            } catch (FinbourneTokenException e){
                 logger.log(Level.WARNING, "Authentication call to refresh token has failed. Attempting to reauthenticate" +
                         " fully with credentials. Refresh failure reason: " + e.getMessage());
-                currentToken = httpLusidTokenProvider.get(Optional.empty());
+                currentToken = httpFinbourneTokenProvider.get(Optional.empty());
             }
         }
         return currentToken;
@@ -60,7 +60,7 @@ public class RefreshingTokenProvider {
      * @param token to check expiry on
      * @return true if token expired false otherwise
      */
-    public boolean isTokenExpired(LusidToken token){
+    public boolean isTokenExpired(FinbourneToken token){
         return LocalDateTime.now().isAfter(token.getExpiresAt());
     }
 

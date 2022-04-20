@@ -28,7 +28,7 @@ public class SampleWorkflowTests{
     @Before
     public void setUp() throws Exception {
         // use the factory to create api clients
-        ApiFactory apiFactory = LusidApiFactoryBuilder.build(CredentialsSource.credentialsFile);
+        ApiFactory apiFactory = ApiFactoryBuilder.build(CredentialsSource.credentialsFile);
         _foldersApi = apiFactory.build(FoldersApi.class);
         _filesApi = apiFactory.build(FilesApi.class);
 
@@ -49,7 +49,7 @@ public class SampleWorkflowTests{
         StorageObject sampleFile = _filesApi.createFile("sampleFile.txt", "/JavaTestFolder/", data.length, data);
 
         // download file from drive - as file has just been uploaded, we should wait for virus scan
-        WaitForVirusScan waitForVirusScan = new WaitForVirusScan(_filesApi);
+        WaitForVirusScan waitForVirusScan = new WaitForVirusScan(_filesApi, null, null);
         File sampleFileDownload = waitForVirusScan.DownloadFileWithRetry(sampleFile.getId());
         byte[] downloadData = Files.readAllBytes(Paths.get(sampleFileDownload.getAbsolutePath()));
 

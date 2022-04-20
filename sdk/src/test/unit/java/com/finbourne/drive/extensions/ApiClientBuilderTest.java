@@ -1,8 +1,8 @@
 package com.finbourne.drive.extensions;
 
 import com.finbourne.drive.ApiClient;
-import com.finbourne.drive.extensions.auth.LusidToken;
-import com.finbourne.drive.extensions.auth.LusidTokenException;
+import com.finbourne.drive.extensions.auth.FinbourneToken;
+import com.finbourne.drive.extensions.auth.FinbourneTokenException;
 import okhttp3.OkHttpClient;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,7 +19,7 @@ public class ApiClientBuilderTest {
     private ApiClient apiClient;
     private OkHttpClient httpClient;
     private ApiConfiguration apiConfiguration;
-    private LusidToken lusidToken;
+    private FinbourneToken finbourneToken;
 
     // test helpers
     @Rule
@@ -29,43 +29,43 @@ public class ApiClientBuilderTest {
     public void setUp(){
         httpClient = mock(OkHttpClient.class);
         apiConfiguration = mock(ApiConfiguration.class);
-        lusidToken = mock(LusidToken.class);
+        finbourneToken = mock(FinbourneToken.class);
         apiClient = mock(ApiClient.class);
         apiClientBuilder = spy(new ApiClientBuilder());
 
         // mock creation of default api client
         doReturn(apiClient).when(apiClientBuilder).createApiClient();
         // mock default well formed lusid token
-        doReturn("access_token_01").when(lusidToken).getAccessToken();
+        doReturn("access_token_01").when(finbourneToken).getAccessToken();
     }
 
     @Test
-    public void createApiClient_OnProxyAddress_ShouldSetHttpClient() throws LusidTokenException {
+    public void createApiClient_OnProxyAddress_ShouldSetHttpClient() throws FinbourneTokenException {
         doReturn("http://proxy.address").when(apiConfiguration).getProxyAddress();
-        apiClientBuilder.createDefaultApiClient(apiConfiguration, httpClient, lusidToken);
+        apiClientBuilder.createDefaultApiClient(apiConfiguration, httpClient, finbourneToken);
         verify(apiClient).setHttpClient(httpClient);
     }
 
     @Test
-    public void createApiClient_OnProxyAddress_ShouldNotSetAndOverrideDefaultHttpClient() throws LusidTokenException {
+    public void createApiClient_OnProxyAddress_ShouldNotSetAndOverrideDefaultHttpClient() throws FinbourneTokenException {
         doReturn(null).when(apiConfiguration).getProxyAddress();
-        apiClientBuilder.createDefaultApiClient(apiConfiguration, httpClient, lusidToken);
+        apiClientBuilder.createDefaultApiClient(apiConfiguration, httpClient, finbourneToken);
         verify(apiClient, times(0)).setHttpClient(httpClient);
     }
 
     @Test
-    public void createApiClient_OnNoApplicationName_ShouldNotSetApplicationHeader() throws LusidTokenException {
+    public void createApiClient_OnNoApplicationName_ShouldNotSetApplicationHeader() throws FinbourneTokenException {
         doReturn(null).when(apiConfiguration).getApplicationName();
-        apiClientBuilder.createDefaultApiClient(apiConfiguration, httpClient, lusidToken);
+        apiClientBuilder.createDefaultApiClient(apiConfiguration, httpClient, finbourneToken);
         verify(apiClient,times(0)).addDefaultHeader(eq("X-LUSID-Application"), any());
     }
 
     @Test
-    public void createApiClient_OnNullAccessToken_ShouldThrowLusidTokenException() throws LusidTokenException {
-        doReturn(null).when(lusidToken).getAccessToken();
-        thrown.expect(LusidTokenException.class);
+    public void createApiClient_OnNullAccessToken_ShouldThrowLusidTokenException() throws FinbourneTokenException {
+        doReturn(null).when(finbourneToken).getAccessToken();
+        thrown.expect(FinbourneTokenException.class);
         thrown.expectMessage("Cannot construct an API client with a null authorisation header. Ensure " +
                 "lusid token generated is valid");
-        apiClientBuilder.createDefaultApiClient(apiConfiguration, httpClient, lusidToken);
+        apiClientBuilder.createDefaultApiClient(apiConfiguration, httpClient, finbourneToken);
     }
 }

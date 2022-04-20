@@ -29,7 +29,7 @@ public class ApiConfigurationBuilderTests {
 
         ApiConfiguration apiConfiguration = apiConfigurationBuilder.build(DUMMY_CREDENTIALS_FILE);
 
-        assertThat(apiConfiguration.getApiUrl(), equalTo("https://some-non-existing-test-instance.lusid.com/api"));
+        assertThat(apiConfiguration.getApiUrl(), equalTo("https://some-non-existing-test-instance.lusid.com/drive"));
         assertThat(apiConfiguration.getTokenUrl(), equalTo("https://some-non-existing-test-instance.doesnotexist.com/oauth2/doesnotexist/v1/token"));
         assertThat(apiConfiguration.getClientId(), equalTo("client-id"));
         assertThat(apiConfiguration.getClientSecret(), equalTo("secret"));
@@ -45,7 +45,7 @@ public class ApiConfigurationBuilderTests {
 
         ApiConfiguration apiConfiguration = apiConfigurationBuilder.build("does_not_matter");
 
-        assertThat(apiConfiguration.getApiUrl(), equalTo("https://some-non-existing-test-instance.lusid.com/api"));
+        assertThat(apiConfiguration.getApiUrl(), equalTo("https://some-non-existing-test-instance.lusid.com/drive"));
         assertThat(apiConfiguration.getTokenUrl(), equalTo("https://some-non-existing-test-instance.doesnotexist.com/oauth2/doesnotexist/v1/token"));
         assertThat(apiConfiguration.getClientId(), equalTo("client-id-from-env"));
         assertThat(apiConfiguration.getClientSecret(), equalTo("secret-from-env"));
@@ -68,7 +68,7 @@ public class ApiConfigurationBuilderTests {
     }
 
     ApiConfiguration validConfigFromEnvVariables(){
-        return new ApiConfiguration("https://some-non-existing-test-instance.doesnotexist.com/oauth2/doesnotexist/v1/token","user","pass","client-id-from-env","secret-from-env","https://some-non-existing-test-instance.lusid.com/api","non-existent",null,null,null,null);
+        return new ApiConfiguration("https://some-non-existing-test-instance.doesnotexist.com/oauth2/doesnotexist/v1/token","user","pass","client-id-from-env","secret-from-env","https://some-non-existing-test-instance.lusid.com/drive","non-existent",null,null,null,null);
     }
 
 

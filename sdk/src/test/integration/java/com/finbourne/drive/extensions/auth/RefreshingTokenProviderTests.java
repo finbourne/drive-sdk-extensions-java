@@ -14,59 +14,59 @@ import static org.mockito.Mockito.spy;
 public class RefreshingTokenProviderTests {
 
     private RefreshingTokenProvider tokenProvider;
-    private HttpLusidTokenProvider httpLusidTokenProvider;
+    private HttpFinbourneTokenProvider httpFinbourneTokenProvider;
 
     @Before
     public void setUp() throws ApiConfigurationException {
         ApiConfiguration apiConfiguration = new ApiConfigurationBuilder().build(CredentialsSource.credentialsFile);
         OkHttpClient httpClient = new HttpClientFactory().build(apiConfiguration);
-        httpLusidTokenProvider = new HttpLusidTokenProvider(apiConfiguration, httpClient);
-        RefreshingTokenProvider instanceToSpy = new RefreshingTokenProvider(httpLusidTokenProvider);
+        httpFinbourneTokenProvider = new HttpFinbourneTokenProvider(apiConfiguration, httpClient);
+        RefreshingTokenProvider instanceToSpy = new RefreshingTokenProvider(httpFinbourneTokenProvider);
         tokenProvider = spy(instanceToSpy);
     }
 
     @Test
-    public void get_OnNoCurrentToken_ShouldReturnNewToken() throws LusidTokenException {
-        LusidToken lusidToken = tokenProvider.get();
-        assertThat(lusidToken.getAccessToken(), not(isEmptyOrNullString()));
-        assertThat(lusidToken.getRefreshToken(), not(isEmptyOrNullString()));
-        assertThat(lusidToken.getExpiresAt(), not(nullValue()));
+    public void get_OnNoCurrentToken_ShouldReturnNewToken() throws FinbourneTokenException {
+        FinbourneToken finbourneToken = tokenProvider.get();
+        assertThat(finbourneToken.getAccessToken(), not(isEmptyOrNullString()));
+        assertThat(finbourneToken.getRefreshToken(), not(isEmptyOrNullString()));
+        assertThat(finbourneToken.getExpiresAt(), not(nullValue()));
     }
 
     @Test
-    public void get_OnNonExpiredCurrentToken_ShouldReturnSameToken() throws LusidTokenException {
+    public void get_OnNonExpiredCurrentToken_ShouldReturnSameToken() throws FinbourneTokenException {
         // first call should create a token
-        LusidToken lusidToken = tokenProvider.get();
+        FinbourneToken finbourneToken = tokenProvider.get();
 
         // mock token not expired
-        doReturn(false).when(tokenProvider).isTokenExpired(lusidToken);
+        doReturn(false).when(tokenProvider).isTokenExpired(finbourneToken);
 
         // second call return same token as it has not expired
-        LusidToken nextLusidToken = tokenProvider.get();
+        FinbourneToken nextFinbourneToken = tokenProvider.get();
 
-        assertThat(nextLusidToken, sameInstance(lusidToken));
+        assertThat(nextFinbourneToken, sameInstance(finbourneToken));
     }
 
     @Test
-    public void get_OnExpiredCurrentToken_ShouldReturnNewToken() throws LusidTokenException {
+    public void get_OnExpiredCurrentToken_ShouldReturnNewToken() throws FinbourneTokenException {
         // first call should create a token
-        LusidToken lusidToken = tokenProvider.get();
+        FinbourneToken finbourneToken = tokenProvider.get();
 
         // mock token expired
-        doReturn(true).when(tokenProvider).isTokenExpired(lusidToken);
+        doReturn(true).when(tokenProvider).isTokenExpired(finbourneToken);
 
         // second call should return a new token as the current one has expired
-        LusidToken nextLusidToken = tokenProvider.get();
+        FinbourneToken nextFinbourneToken = tokenProvider.get();
 
-        assertThat(nextLusidToken.getAccessToken(), not(isEmptyOrNullString()));
-        assertThat(nextLusidToken.getRefreshToken(), not(isEmptyOrNullString()));
-        assertThat(nextLusidToken.getExpiresAt(), not(nullValue()));
+        assertThat(nextFinbourneToken.getAccessToken(), not(isEmptyOrNullString()));
+        assertThat(nextFinbourneToken.getRefreshToken(), not(isEmptyOrNullString()));
+        assertThat(nextFinbourneToken.getExpiresAt(), not(nullValue()));
 
-        assertThat(nextLusidToken, not(equalTo(lusidToken)));
-        assertThat(nextLusidToken.getAccessToken(), not(equalTo(lusidToken.getAccessToken())));
-        assertThat(nextLusidToken.getExpiresAt(), not(equalTo(lusidToken.getExpiresAt())));
+        assertThat(nextFinbourneToken, not(equalTo(finbourneToken)));
+        assertThat(nextFinbourneToken.getAccessToken(), not(equalTo(finbourneToken.getAccessToken())));
+        assertThat(nextFinbourneToken.getExpiresAt(), not(equalTo(finbourneToken.getExpiresAt())));
         // although a new token the refresh token parameter should remain constant
-        assertThat(nextLusidToken.getRefreshToken(), equalTo(lusidToken.getRefreshToken()));
+        assertThat(nextFinbourneToken.getRefreshToken(), equalTo(finbourneToken.getRefreshToken()));
     }
 
 

@@ -2,7 +2,7 @@
 
 # LUSID<sup>®</sup> Drive Java SDK Extensions
 
-These are the JAVA SDK Extensions to accompany the [C# SDK (Preview) for the Drive application](https://github.com/finbourne/drive-sdk-java-preview).
+These are the Java SDK Extensions to accompany the [Java SDK (Preview) for the Drive application](https://github.com/finbourne/drive-sdk-java-preview).
 
 This extensions package provides the user with additional extensions to make it easy to configure and use the API endpoints. 
 
