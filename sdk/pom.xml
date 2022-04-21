@@ -264,7 +264,7 @@
         <dependency>
             <groupId>com.finbourne</groupId>
             <artifactId>drive-sdk-preview</artifactId>
-            <version>-20220419.100045-3</version>
+            <version>0.1.328-20220421.151500-1</version>
         </dependency>
 
         <!-- HTTP client: jersey-client -->
