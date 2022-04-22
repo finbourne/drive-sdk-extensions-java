@@ -31,19 +31,19 @@ public class ApiFactoryTest {
     // General Cases
 
     @Test
-    public void build_ForFilesApi_ReturnPortfolioApi(){
+    public void build_ForFilesApi_ReturnFilesApi(){
         FilesApi filesApi = apiFactory.build(FilesApi.class);
         assertThat(filesApi, instanceOf(FilesApi.class));
     }
 
     @Test
-    public void build_ForFoldersApi_ReturnTransactionPortfolioApi(){
+    public void build_ForFoldersApi_ReturnFoldersApi(){
         FoldersApi foldersApi = apiFactory.build(FoldersApi.class);
         assertThat(foldersApi, instanceOf(FoldersApi.class));
     }
 
     @Test
-    public void build_ForSearchApi_ReturnAggregationApi(){
+    public void build_ForSearchApi_ReturnSearchApi(){
         SearchApi searchApi = apiFactory.build(SearchApi.class);
         assertThat(searchApi, instanceOf(SearchApi.class));
     }

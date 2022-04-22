@@ -2,7 +2,7 @@ version: "3"
 
 services:
 
-  lusid-sdk-java-preview-test:
+  drive-sdk-java-preview-test:
     build: .
     container_name: drive-sdk-extensions-java-test
     image: maven:3.8.5-jdk-11
