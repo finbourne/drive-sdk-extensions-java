@@ -5,7 +5,7 @@
     <artifactId>drive-sdk-extensions</artifactId>
     <packaging>jar</packaging>
     <name>drive-sdk-extensions</name>
-    <version>0.1.328-SNAPSHOT</version>
+    <version>0.2.0</version>
     <url>https://github.com/finbourne/drive-sdk-extensions-java</url>
     <description>OpenAPI Java</description>
     <scm>
@@ -401,6 +401,6 @@
         <junit-version>4.13.1</junit-version>
         <hamcrest-version>1.3</hamcrest-version>
         <mockito-version>3.3.3</mockito-version>
-        <drive-sdk-version>0.1.328-SNAPSHOT</drive-sdk-version>
+        <drive-sdk-version>0.1.349-SNAPSHOT</drive-sdk-version>
     </properties>
 </project>
