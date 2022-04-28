@@ -6,11 +6,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Provides {@link FinbourneToken} used for API authentication and manages
- * token expiry to ensure continued connectivity to LUSID API without the need
- * for explicit reauthentication by the caller.
- *
- */
+* Provides {@link FinbourneToken} used for API authentication and manages
+* token expiry to ensure continued connectivity to Drive API without the need
+* for explicit reauthentication by the caller.
+*
+*/
 public class RefreshingTokenProvider {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
@@ -22,23 +22,23 @@ public class RefreshingTokenProvider {
     private FinbourneToken currentToken;
 
     /**
-     * Creates a KeepAuthTokenProvider based on an underlying token provider
-     * that manages direct authentication with LUSID.
-     *
-     * @param httpFinbourneTokenProvider underlying provider that manages explicit authentication calls to LUSID
-     */
+    * Creates a KeepAuthTokenProvider based on an underlying token provider
+    * that manages direct authentication with Drive.
+    *
+    * @param httpFinbourneTokenProvider underlying provider that manages explicit authentication calls to Drive
+    */
     public RefreshingTokenProvider(HttpFinbourneTokenProvider httpFinbourneTokenProvider) {
         this.httpFinbourneTokenProvider = httpFinbourneTokenProvider;
     }
 
     /**
-     * Stores an initial {@link FinbourneToken} on complete authentication (with username and password) and
-     * will subsequently manage refreshing the token after expiry.
-     *
-     * @return a live and valid {@link FinbourneToken}
-     *
-     * @throws FinbourneTokenException on failing to authenticate and retrieve a token
-     */
+    * Stores an initial {@link FinbourneToken} on complete authentication (with username and password) and
+    * will subsequently manage refreshing the token after expiry.
+    *
+    * @return a live and valid {@link FinbourneToken}
+    *
+    * @throws FinbourneTokenException on failing to authenticate and retrieve a token
+    */
     public synchronized FinbourneToken get() throws FinbourneTokenException {
         if (currentToken == null) {
             currentToken = httpFinbourneTokenProvider.get(Optional.empty());
@@ -55,11 +55,11 @@ public class RefreshingTokenProvider {
     }
 
     /**
-     * Checks if a token has expired
-     *
-     * @param token to check expiry on
-     * @return true if token expired false otherwise
-     */
+    * Checks if a token has expired
+    *
+    * @param token to check expiry on
+    * @return true if token expired false otherwise
+    */
     public boolean isTokenExpired(FinbourneToken token){
         return LocalDateTime.now().isAfter(token.getExpiresAt());
     }

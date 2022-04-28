@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Container for token information required to authenticate against LUSID.
- *
- */
+* Container for token information required to authenticate.
+*
+*/
 public class FinbourneToken {
 
     /** Token used against API calls for authentication */
@@ -25,15 +25,15 @@ public class FinbourneToken {
     }
 
     public String getAccessToken() {
-        return accessToken;
+    return accessToken;
     }
 
     public String getRefreshToken() {
-        return refreshToken;
+    return refreshToken;
     }
 
     public LocalDateTime getExpiresAt() {
-        return expiresAt;
+    return expiresAt;
     }
 
     @Override

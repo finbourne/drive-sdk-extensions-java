@@ -7,18 +7,18 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 /**
- * Builds http client to communicate to Drive API instances.
- *
- */
+* Builds http client to communicate to Drive API instances.
+*
+*/
 public class HttpClientFactory {
 
     /**
-     *  Builds a {@link OkHttpClient} from a {@link ApiConfiguration} to make
-     *  calls to the Drive API.
-     *
-     * @param apiConfiguration configuration to connect to Drive API
-     * @return an client for http calls to Drive API
-     */
+    *  Builds a {@link OkHttpClient} from a {@link ApiConfiguration} to make
+    *  calls to the Drive API.
+    *
+    * @param apiConfiguration configuration to connect to Drive API
+    * @return an client for http calls to Drive API
+    */
     public OkHttpClient build(ApiConfiguration apiConfiguration){
         final OkHttpClient httpClient;
 
@@ -34,8 +34,8 @@ public class HttpClientFactory {
                         return response.request().newBuilder()
                                 .header("Proxy-Authorization", credential)
                                 .build();
-                    })
-                    .build();
+            })
+            .build();
         }
         else {
             httpClient = new OkHttpClient();

@@ -44,7 +44,7 @@ public class HttpFinbourneTokenProvider {
      * is available. Otherwise will attempt to refresh the token.
      *
      * @param refreshToken - to attempt token refresh with it is available.
-     * @return an authenticated finbourne token
+     * @return an authenticated Finbourne token
      *
      * @throws FinbourneTokenException on failing to authenticate and retrieve a token
      */
@@ -135,7 +135,7 @@ public class HttpFinbourneTokenProvider {
         return requestBuilder.build();
     }
 
-    LocalDateTime calculateExpiryAtTime(LocalDateTime now, int expires_in){
+    public LocalDateTime calculateExpiryAtTime(LocalDateTime now, int expires_in){
         // expiration is shortened to overcome a race condition where the token is still valid when retrieved from cache but expired when
         // used in an api call
         return now.plusSeconds(expires_in - 30);

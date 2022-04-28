@@ -8,13 +8,13 @@ import java.util.Optional;
 public class FileConfigurationLoader {
 
     /**
-     * Loads the API configuration either from the resources in the classpath or directly from
-     * the file system.
-     *
-     * @param apiConfigurationFile name of the resource or absolute path of the configuration file
-     * @return API configuration file
-     * @throws IOException if config cannot be found
-     */
+    * Loads the API configuration either from the resources in the classpath or directly from
+    * the file system.
+    *
+    * @param apiConfigurationFile name of the resource or absolute path of the configuration file
+    * @return API configuration file
+    * @throws IOException if config cannot be found
+    */
     public File loadConfiguration(String apiConfigurationFile) throws IOException {
 
         Optional<File> configFileFromResource = getConfigFileFromResources(apiConfigurationFile);

@@ -9,14 +9,14 @@ import java.util.Map;
 public class ApiConfigurationBuilder {
 
     /**
-     * Build an {@link ApiConfiguration}. Attempts to build a valid configuration
-     * from system environment variables. Otherwise will attempt to load the configuration
-     * from the provided secrets file.
-     *
-     * @param apiSecretsFilename - file containing configuration parameters
-     * @return a valid {@link ApiConfiguration}
-     * @throws ApiConfigurationException
-     */
+    * Build an {@link ApiConfiguration}. Attempts to build a valid configuration
+    * from system environment variables. Otherwise will attempt to load the configuration
+    * from the provided secrets file.
+    *
+    * @param apiSecretsFilename - file containing configuration parameters
+    * @return a valid {@link ApiConfiguration}
+    * @throws ApiConfigurationException
+    */
     public ApiConfiguration build(String apiSecretsFilename) throws ApiConfigurationException {
 
         ApiConfiguration apiConfiguration = getApiConfigurationFromEnvironmentVariables();
@@ -79,12 +79,12 @@ public class ApiConfigurationBuilder {
             String proxyPassword = null;
 
             if (apiConfigValues.containsKey("proxy")) {
-                Map proxyConfig = (Map) apiConfigValues.get("proxy");
+            Map proxyConfig = (Map) apiConfigValues.get("proxy");
 
-                proxyAddress = (String) proxyConfig.get("proxyAddress");
-                proxyPort = (Integer) proxyConfig.get("proxyPort");
-                proxyUsername = (String) proxyConfig.get("username");
-                proxyPassword = (String) proxyConfig.get("password");
+            proxyAddress = (String) proxyConfig.get("proxyAddress");
+            proxyPort = (Integer) proxyConfig.get("proxyPort");
+            proxyUsername = (String) proxyConfig.get("username");
+            proxyPassword = (String) proxyConfig.get("password");
             }
 
             return new ApiConfiguration(tokenUrl, username, password, clientId, clientSecret, apiUrl, applicationName, proxyAddress, proxyPort, proxyUsername, proxyPassword);

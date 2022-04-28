@@ -32,7 +32,7 @@ public class ApiConfiguration {
     private String clientSecret;
 
     /**
-     * LUSID API Url
+     * Drive API Url
      */
     private String apiUrl;
 
