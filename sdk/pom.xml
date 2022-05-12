@@ -5,7 +5,7 @@
     <artifactId>drive-sdk-extensions</artifactId>
     <packaging>jar</packaging>
     <name>drive-sdk-extensions</name>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <url>https://github.com/finbourne/drive-sdk-extensions-java</url>
     <description>OpenAPI Java</description>
     <scm>
